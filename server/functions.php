@@ -310,22 +310,4 @@
   //login('jkim848@gatech.edu', 'foodparent');
   //login_check();
   //admin_check();
-
-
-  function my_session_regenerate_id() {
-    $new_session_id = session_create_id();
-    $_SESSION['new_session_id'] = $new_session_id;
-    
-    $_SESSION['destroyed'] = time();
-    
-    session_commit();
-
-    session_id($new_session_id);
-    ini_set('session.use_strict_mode', 0);
-    session_start();
-    ini_set('session.use_strict_mode', 1);
-    
-    unset($_SESSION['destroyed']);
-    unset($_SESSION['new_session_id']);
-}
 ?>
