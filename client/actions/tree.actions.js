@@ -29,6 +29,7 @@ class TreeActions {
         if (response === false) {
           displayFailMessage(localization(65));
         }
+        console.log('mix', response)
         this.fetchedTree(response);
       }).catch((code) => {
         displayFailMessage(localization(code));

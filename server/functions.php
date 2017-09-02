@@ -1,5 +1,5 @@
 <?php
-  include_once 'database.php';
+  include_once '../serverconfig/database.php';
 
   function sec_session_start() {
     $session_name = 'sec_session_id';   // Set a custom session name
@@ -13,7 +13,7 @@
     }
     // Gets current cookies params.
     $cookieParams = session_get_cookie_params();
-    session_set_cookie_params($cookieParams["lifetime"],
+    session_set_cookie_params(3600 * 24 * 7,
       $cookieParams["path"],
       $cookieParams["domain"],
       $secure,
@@ -310,4 +310,22 @@
   //login('jkim848@gatech.edu', 'foodparent');
   //login_check();
   //admin_check();
+
+
+  function my_session_regenerate_id() {
+    $new_session_id = session_create_id();
+    $_SESSION['new_session_id'] = $new_session_id;
+    
+    $_SESSION['destroyed'] = time();
+    
+    session_commit();
+
+    session_id($new_session_id);
+    ini_set('session.use_strict_mode', 0);
+    session_start();
+    ini_set('session.use_strict_mode', 1);
+    
+    unset($_SESSION['destroyed']);
+    unset($_SESSION['new_session_id']);
+}
 ?>

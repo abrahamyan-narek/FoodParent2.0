@@ -26,6 +26,7 @@
   function read() {
     $data = json_decode(file_get_contents('php://input'));
     $params = null;
+
     if ($data != null) {
       $params = array(
       "id" => $data->{'id'},
@@ -55,10 +56,9 @@
     $sql .= "AND `dead` = 0 ";
 
 
-    if (isset($_SESSION['temp_trees']) && $_SESSION['temp_trees'] != null) {
-      $sql .= "OR `id` IN (" . $_SESSION['temp_trees'] . ") ";
-    }
-
+    // if (isset($_SESSION['temp_trees']) && $_SESSION['temp_trees'] != null) {
+    //   $sql .= "OR `id` IN (" . $_SESSION['temp_trees'] . ") ";
+    // }
 
     try {
       $pdo = getConnection();
@@ -148,6 +148,7 @@
       "lat" => $data->{'lat'},
       "lng" => $data->{'lng'},
       "food" => $data->{'food'},
+      "flag" => 0,
       "owner" => $owner,
       "description" => $data->{'description'},
       "address" => $data->{'address'},
@@ -157,8 +158,8 @@
       "rate" => $data->{'rate'},
       "updated" => date("Y-m-d H:i:s"),
     );
-    $sql = "INSERT INTO `tree` VALUES ( NULL, :lat, :lng, :food, :owner, :description, :address, :public, :dead, :parent, :rate, :updated )";
-
+    $sql = "INSERT INTO `tree` VALUES ( NULL, :lat, :lng, :food, :flag, :owner, :description, :address, :public, :dead, :parent, :rate, :updated )";
+    // die($sql);exit;
     try {
       $pdo = getConnection();
       $stmt = $pdo->prepare($sql);
@@ -168,7 +169,6 @@
       $params = array(
         "id" => $pdo->lastInsertId(),
       );
-
       // Store newly added tree into a cookie so that users can edit before cookie being expired.
       if (isset($_SESSION['temp_trees']) && $_SESSION['temp_trees'] != null) {
         $temp_trees = explode(",", $_SESSION['temp_trees']);
